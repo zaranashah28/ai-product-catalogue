@@ -5,15 +5,18 @@ import { enquirySchema, sendEnquiry, type MailSender } from './enquiries/service
 import { fetchProductImage } from './adapters/products'
 import { categorySlug, type Product } from '../../shared/catalogue'
 
+// Give the browser a same-origin image URL so the server can enforce proxy limits and provide a fallback.
 const serialize = (product: Product) => ({ ...product, image: `/api/products/${product.id}/image` })
 const placeholder = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240"><rect width="320" height="240" fill="#eef0e9"/><path d="M110 96l50-28 50 28v58l-50 28-50-28z M110 96l50 28 50-28 M160 124v58" fill="none" stroke="#819284" stroke-width="3"/></svg>'
 
+// Inject catalogue loading and mail delivery so routes can use different providers and tests can supply fixtures.
 export function createApp(source: ProductSource, send: MailSender) {
   const app = express()
   app.disable('x-powered-by')
   app.use(express.json({ limit: '8kb' }))
   const find = async (id: string) => /^\d+$/.test(id) ? (await source()).find(product => product.id === Number(id)) : undefined
 
+  // The home response combines curated products with the category list used for navigation.
   app.get('/api/catalogue/home', async (_, res) => {
     const products = await source()
     const featured = featuredIds.map(id => products.find(product => product.id === id))
@@ -24,6 +27,7 @@ export function createApp(source: ProductSource, send: MailSender) {
     })
     res.json({ categories: navigation, featured: featured.map(serialize) })
   })
+  // Rank category products once before splitting them into the featured and remaining groups.
   app.get('/api/categories/:slug', async (req, res) => {
     const products = await source()
     const category = categories(products).find(item => item.slug === req.params.slug)
@@ -52,6 +56,7 @@ export function createApp(source: ProductSource, send: MailSender) {
       res.set('Cache-Control', 'public, max-age=30').type('image/svg+xml').send(placeholder)
     }
   })
+  // Resolve the product from the route and confirm the submission only after mail delivery accepts it.
   app.post('/api/products/:id/enquiries', async (req, res) => {
     const enquiry = enquirySchema.safeParse(req.body)
     if (!enquiry.success) {

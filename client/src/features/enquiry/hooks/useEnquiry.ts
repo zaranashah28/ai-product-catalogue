@@ -7,6 +7,7 @@ type State = { status: 'idle' | 'pending' | 'success' } | { status: 'error'; err
 
 export function useEnquiry(id: number) {
   const [state, setState] = useState<State>({ status: 'idle' })
+  // Block a second submission immediately, before React renders the disabled send button.
   const pending = useRef(false)
   async function submit(enquiry: Enquiry) {
     if (pending.current) return

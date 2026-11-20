@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import type { Category } from '../../../../../shared/catalogue'
 
+// Keep category selections in the URL so they survive refresh and can be shared.
 function categoryPath([first, ...rest]: string[]) {
   if (!first) return '/'
   const params = new URLSearchParams()

@@ -1,14 +1,32 @@
 # AI usage
 
-OpenAI Codex supported planning, implementation, review, and verification. The exact model identifier was unavailable to the assistant. The working plan is in [TODAY_PLAN.md](TODAY_PLAN.md). No agent instruction files were added.
+## Tools, model, and plan
 
-## Review moments
+- **AI coding tool and model** — OpenAI Codex, based on GPT-6. The exact model variant was unavailable.
+- **Verification tools** — npm and Vite for builds, Vitest for frontend and backend tests, and Docker Compose, Playwright, and Mailpit for the browser-to-email smoke test.
+- **Agent instructions** — The repo contains no committed project-specific agent instruction files.
+- **Plan and spec** — The working plan is in [TODAY_PLAN.md](TODAY_PLAN.md). The acceptance assumptions and known deviation are in [DECISIONS.md](DECISIONS.md).
 
-- The initial plan assumed Node 24. Inspecting NVM revealed an existing Node 22 installation, and the build and test commands were verified on it.
-- The user specified an isolated Axios client and feature-owned hooks and endpoints. This kept requests out of page components.
-- The initial dependency draft used an older Nodemailer major. The registry audit flagged it, so the implementation upgraded it and reran verification.
-- The first npm resolution hit an internal resolver error. Retrying with a temporary cache and explicitly declaring Testing Library’s DOM dependency resolved installation.
+## Prompts and decisions that shaped the solution
+
+1. The user directed Codex to use one Axios client and keep hooks and API calls with their features. Page components could then focus on rendering the catalogue and form.
+2. The user chose Docker Compose and Mailpit for the enquiry demo. Codex submitted an enquiry through the browser and checked that one matching email arrived.
+3. The user asked to see both browser URLs when running plain `docker compose up`. The app logs the catalogue and Mailpit URLs at startup.
+4. The user reiterated that product data must go through the backend and asked for the provider URL in environment configuration. Codex verified that metadata and images already used Express routes, then added the server-side `PRODUCT_API_ORIGIN` setting to Compose and `.env.example`.
+
+## What the AI got wrong and how it was caught
+
+- **Node version** — The initial AI plan assumed Node 24. Inspecting NVM revealed an existing Node 22 installation, and the user’s startup logs showed their terminal still used Node 16. The project was built and tested on Node 22, and the setup instructions specify the required version.
+- **Mail dependency** — The initial AI dependency draft used an older Nodemailer major. The npm audit flagged it, so the dependency was upgraded and verification was rerun.
+- **Startup command** — The AI first added a `make up` wrapper to display URLs. The user clarified that plain `docker compose up` should display them. Codex added the URLs to the app’s startup logs and verified the production build.
 
 ## Time
 
-The implementation session took roughly 11 minutes elapsed, including about 6 minutes of building and 5 minutes of testing, review, and documentation. The earlier planning discussion was intermittent, and its active time was untracked. Docker verification and PR submission are pending.
+Total project time was approximately **2 hours**. The split below is a rough estimate.
+
+| Activity | Approximate time |
+| --- | ---: |
+| Planning and clarifying acceptance criteria | 25 minutes |
+| Building the catalogue, enquiry flow, and Docker setup | 55 minutes |
+| Running tests and verifying the enquiry in Mailpit | 25 minutes |
+| Reviewing the code and updating submission documentation | 15 minutes |

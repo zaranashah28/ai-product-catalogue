@@ -1,10 +1,13 @@
 import { useState } from 'react'
+import { Spinner } from '../../../components/Spinner'
 import { useEnquiry } from '../hooks/useEnquiry'
 
 export function EnquiryForm({ id }: { id: number }) {
   const [open, setOpen] = useState(false)
   const { state, submit } = useEnquiry(id)
+  const pending = state.status === 'pending'
   const error = state.status === 'error' ? state.error : undefined
+  // Focus the confirmation when it replaces the form after a successful submission.
   if (state.status === 'success') return <p className="confirmation" role="status" ref={element => element?.focus()} tabIndex={-1}><strong>Thank you.</strong> Your enquiry has been sent.</p>
   if (!open) return <button onClick={() => setOpen(true)}>Enquire</button>
 
@@ -24,6 +27,6 @@ export function EnquiryForm({ id }: { id: number }) {
     <label htmlFor="enquiry-message">Message (optional)</label>
     <textarea id="enquiry-message" name="message" rows={4} maxLength={2000} aria-invalid={Boolean(error?.fields?.message)} aria-describedby={error?.fields?.message ? 'message-error' : undefined} />
     {error?.fields?.message && <span id="message-error">{error.fields.message}</span>}
-    <button disabled={state.status === 'pending'}>{state.status === 'pending' ? 'Sending…' : 'Send enquiry'}</button>
+    <button disabled={pending}>{pending ? <><Spinner />Sending…</> : 'Send enquiry'}</button>
   </form>
 }

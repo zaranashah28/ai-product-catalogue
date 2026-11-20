@@ -1,6 +1,7 @@
 import { categorySlug, type Product } from '../../../shared/catalogue'
 
 export type ProductSource = () => Promise<Product[]>
+// The order of these curated IDs determines the homepage display order.
 export const featuredIds = [1, 3, 5, 9, 15]
 export function categories(products: Product[]) {
   return [...new Set(products.map(product => product.category))].sort().map(name => ({ name, slug: categorySlug(name) }))

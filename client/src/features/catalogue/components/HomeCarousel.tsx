@@ -7,9 +7,11 @@ export function HomeCarousel({ featured }: { featured: Product[] }) {
   const [hovered, setHovered] = useState(false)
   const [focused, setFocused] = useState(false)
   const [reduceMotion, setReduceMotion] = useState(() => window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false)
+  // The introductory slide comes first, followed by up to two featured products.
   const spotlights = featured.slice(0, 2)
   const slideCount = spotlights.length + 1
   const product = spotlights[index - 1]
+  // Pause while someone is interacting with the carousel or has requested reduced motion.
   const rotating = !hovered && !focused && !reduceMotion && slideCount > 1
 
   useEffect(() => {

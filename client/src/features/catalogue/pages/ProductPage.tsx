@@ -2,30 +2,33 @@ import { useCallback, useLayoutEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { categorySlug } from '../../../../../shared/catalogue'
 import { QueryState } from '../../../components/QueryState'
+import { Spinner } from '../../../components/Spinner'
 import { EnquiryForm } from '../../enquiry/components/EnquiryForm'
 import { catalogueApi } from '../api/catalogueApi'
 import { formatPrice } from '../components/ProductCard'
 import { RelatedProducts } from '../components/RelatedProducts'
 import { useCatalogueQuery } from '../hooks/useCatalogueQuery'
 
+// Reserve space for the product layout while announcing the loading state.
 function ProductLoader() {
-  return <div role="status" className="product-loading">
-    <span className="sr-only">Loading product details…</span>
-    <div aria-hidden="true" className="detail">
-      <div className="product-image skeleton" />
-      <div className="product-summary">
-        <div className="skeleton skeleton-category" />
-        <div className="skeleton skeleton-title" />
-        <div className="skeleton skeleton-rating" />
-        <div className="skeleton skeleton-price" />
-        <div className="skeleton skeleton-action" />
-      </div>
+  return <div className="detail">
+    <div className="product-image skeleton loading-state" role="status">
+      <Spinner />
+      <span>Loading product details…</span>
+    </div>
+    <div className="product-summary" aria-hidden="true">
+      <div className="skeleton skeleton-category" />
+      <div className="skeleton skeleton-title" />
+      <div className="skeleton skeleton-rating" />
+      <div className="skeleton skeleton-price" />
+      <div className="skeleton skeleton-action" />
     </div>
   </div>
 }
 
 export function ProductPage() {
   const { id = '' } = useParams()
+  // Reset the scroll position before painting when a related product opens in the same route.
   useLayoutEffect(() => {
     const viewport = document.scrollingElement ?? document.documentElement
     viewport.scrollTop = 0

@@ -6,4 +6,4 @@
 4. Run frontend and backend suites, build the client, and exercise the Vite-to-Express flow with the local capture sender.
 5. Record the setup, trade-offs, AI review, and time spent.
 
-Docker Compose and Mailpit configuration have been added. Running the stack from a clean checkout and opening the submission PR remain pending.
+Docker Compose configuration validated and both containers started from the working tree. A browser smoke test submitted a sample product enquiry, displayed “Thank you”, and confirmed that exactly one matching email reached Mailpit with the configured sender and recipient, product title and ID, contact details, message, and customer Reply-To. Opening the submission PR remains pending.

@@ -1,6 +1,7 @@
 import { z } from 'zod'
 import type { Enquiry, Product } from '../../../shared/catalogue'
 
+// Validate and trim form data at the API boundary.
 export const enquirySchema = z.object({
   name: z.string().trim().min(1, 'Enter your name.').max(100),
   email: z.string().trim().max(254).pipe(z.email('Enter a valid email.')),
@@ -8,6 +9,7 @@ export const enquirySchema = z.object({
 })
 export type Mail = { replyTo: string; subject: string; text: string }
 export type MailSender = (mail: Mail) => Promise<void>
+// Use the customer address as Reply-To while the transport applies the configured sender and recipient.
 export function sendEnquiry(send: MailSender, product: Product, enquiry: Enquiry) {
   return send({
     replyTo: enquiry.email,

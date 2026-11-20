@@ -13,3 +13,5 @@ export interface HomeData { featured: Product[]; categories: Category[] }
 export interface CategoryData { category: Category; featured: Product[]; additional: Product[] }
 export interface Enquiry { name: string; email: string; message?: string }
 export interface ApiError { message: string; fields?: Record<string, string> }
+
+export const categorySlug = (name: string) => name.toLowerCase().replace(/[^a-z0-9 ]/g, '').trim().replace(/ +/g, '-')

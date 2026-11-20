@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { cleanup, fireEvent, render, screen } from '@testing-library/react'
+import { act, cleanup, fireEvent, render, screen, within } from '@testing-library/react'
 import { MemoryRouter, useLocation } from 'react-router-dom'
 import { afterEach, beforeEach, expect, it, vi } from 'vitest'
 import { App } from './App'
@@ -42,8 +42,43 @@ it('renders five featured cards, browses a category and opens a product', async 
   expect(screen.getAllByRole('heading', { level: 3 })).toHaveLength(5)
   fireEvent.click(screen.getByRole('link', { name: 'Gear' }))
   await screen.findByText('More in this category')
+  const viewport = document.scrollingElement ?? document.documentElement
+  viewport.scrollTop = 500
   fireEvent.click(screen.getByRole('link', { name: /Canvas item 1/ }))
+  expect(viewport.scrollTop).toBe(0)
   expect(await screen.findByRole('heading', { name: 'Canvas item 1' })).toBeTruthy()
+  const related = await screen.findByRole('region', { name: 'You might also like' })
+  expect(within(related).getAllByRole('link')).toHaveLength(4)
+  expect(within(related).queryByRole('link', { name: /Canvas item 1/ })).toBeNull()
+  fireEvent.click(screen.getByRole('link', { name: 'Gear' }))
+  expect(await screen.findByRole('heading', { name: 'Gear' })).toBeTruthy()
+})
+it('browses homepage highlights and wraps back to the introduction', async () => {
+  open()
+  await screen.findByRole('heading', { name: /Find your next/ })
+  fireEvent.click(screen.getByRole('button', { name: 'Next' }))
+  expect(screen.getByRole('link', { name: 'View product' }).getAttribute('href')).toBe('/products/1')
+  fireEvent.click(screen.getByRole('button', { name: 'Show slide 3' }))
+  expect(screen.getByRole('heading', { name: 'Canvas item 2', level: 1 })).toBeTruthy()
+  fireEvent.click(screen.getByRole('button', { name: 'Next' }))
+  expect(screen.getByRole('heading', { name: /Find your next/ })).toBeTruthy()
+})
+it('rotates automatically and pauses when hovered', async () => {
+  vi.useFakeTimers()
+  try {
+    await act(async () => { open() })
+    act(() => { vi.advanceTimersByTime(6000) })
+    expect(screen.getByRole('heading', { name: 'Canvas item 1', level: 1 })).toBeTruthy()
+    const carousel = screen.getByRole('region', { name: 'Featured catalogue highlights' })
+    fireEvent.mouseEnter(carousel)
+    act(() => { vi.advanceTimersByTime(12000) })
+    expect(screen.getByRole('heading', { name: 'Canvas item 1', level: 1 })).toBeTruthy()
+    fireEvent.mouseLeave(carousel)
+    act(() => { vi.advanceTimersByTime(6000) })
+    expect(screen.getByRole('heading', { name: 'Canvas item 2', level: 1 })).toBeTruthy()
+  } finally {
+    vi.useRealTimers()
+  }
 })
 it('keeps filter chips visible, combines categories, and clears back to home', async () => {
   open()
@@ -83,6 +118,7 @@ it('preserves details after failure and shows thanks after a successful retry', 
   const pending = new Promise<void>((_, fail) => { reject = fail })
   vi.mocked(submitEnquiry).mockReturnValueOnce(pending).mockResolvedValueOnce()
   open('/products/1')
+  expect(screen.getByText('Loading product details…').closest('[role=status]')).toBeTruthy()
   fireEvent.click(await screen.findByRole('button', { name: 'Enquire' }))
   const name = screen.getByLabelText<HTMLInputElement>('Name')
   const email = screen.getByLabelText<HTMLInputElement>('Email')

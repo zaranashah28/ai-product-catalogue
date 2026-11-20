@@ -1,8 +1,9 @@
 import express, { type ErrorRequestHandler } from 'express'
-import { categories, featuredIds, rank, slug, type ProductSource } from './catalogue/service'
+import { categories, featuredIds, rank, type ProductSource } from './catalogue/service'
+import { searchProducts } from './catalogue/search'
 import { enquirySchema, sendEnquiry, type MailSender } from './enquiries/service'
 import { fetchProductImage } from './adapters/products'
-import type { Product } from '../../shared/catalogue'
+import { categorySlug, type Product } from '../../shared/catalogue'
 
 const serialize = (product: Product) => ({ ...product, image: `/api/products/${product.id}/image` })
 const placeholder = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240"><rect width="320" height="240" fill="#eef0e9"/><path d="M110 96l50-28 50 28v58l-50 28-50-28z M110 96l50 28 50-28 M160 124v58" fill="none" stroke="#819284" stroke-width="3"/></svg>'
@@ -27,14 +28,14 @@ export function createApp(source: ProductSource, send: MailSender) {
     const products = await source()
     const category = categories(products).find(item => item.slug === req.params.slug)
     if (!category) return res.status(404).json({ message: 'Category not found.' })
-    const sorted = rank(products.filter(item => slug(item.category) === category.slug)).map(serialize)
+    const sorted = rank(products.filter(item => categorySlug(item.category) === category.slug)).map(serialize)
     res.json({ category, featured: sorted.slice(0, 3), additional: sorted.slice(3) })
   })
   app.get('/api/products', async (req, res) => {
     const query = req.query.q
     if (typeof query !== 'string' || !query.trim() || query.length > 120) return res.status(400).json({ message: 'Enter a search term of up to 120 characters.' })
     const term = query.trim().toLowerCase()
-    res.json((await source()).filter(item => [item.title, item.description].some(text => text.toLowerCase().includes(term))).map(serialize))
+    res.json(searchProducts(await source(), term).map(serialize))
   })
   app.get('/api/products/:id', async (req, res) => {
     const product = await find(req.params.id)

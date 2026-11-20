@@ -14,12 +14,12 @@ export function SearchForm() {
     navigate(term ? `/search?${new URLSearchParams({ q: term })}` : '/')
   }}>
     <label className="sr-only" htmlFor="catalogue-search">Search products</label>
-    <input id="catalogue-search" name="q" type="search" value={value} placeholder="Search products" maxLength={120} onChange={event => {
+    <button type="submit" aria-label="Search"><span className="search-icon" aria-hidden="true" /></button>
+    <input id="catalogue-search" name="q" type="search" value={value} placeholder="Search for products" maxLength={120} onChange={event => {
       setValue(event.currentTarget.value)
       if (pathname === '/search' && params.has('q') && !event.currentTarget.value.trim()) {
         navigate('/', { replace: true })
       }
     }} />
-    <button>Search</button>
   </form>
 }

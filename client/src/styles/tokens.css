@@ -1,0 +1,9 @@
+:root {
+  color-scheme: light;
+  --ink: #18251e;
+  --accent: #245542;
+  --surface: #f5f6f2;
+  --tint: #e2efe3;
+  --line: #d2dbd2;
+  --radius: .85rem;
+}

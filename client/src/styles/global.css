@@ -1,0 +1,45 @@
+@import './tokens.css';
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--surface); color: var(--ink); font: 1rem/1.55 system-ui, sans-serif; }
+.shell { width: min(74rem, calc(100% - 2rem)); margin-inline: auto; }
+header { background: white; border-bottom: 1px solid var(--line); }
+.header-inner, .search, .card-meta { display: flex; align-items: center; gap: .75rem; }
+.header-inner, .card-meta { justify-content: space-between; }
+.header-inner { padding-block: .9rem; flex-wrap: wrap; }
+.brand { font: 700 1.6rem Georgia, serif; }
+.search { flex: 0 1 26rem; }
+.search input { min-width: 0; flex: 1; }
+main { padding-block: 2.5rem 4rem; }
+h1, h2 { font-family: Georgia, serif; line-height: 1.1; }
+h1 { font-size: clamp(2rem, 5vw, 3.7rem); margin: 0 0 1rem; }
+h2 { margin-top: 2rem; }
+a { color: var(--accent); }
+.brand, .card, .category-nav a { text-decoration: none; }
+.intro { background: var(--tint); padding: clamp(1.4rem, 5vw, 4rem); border-radius: var(--radius); }
+.intro p { margin-bottom: 0; }
+.category-nav { display: flex; flex-wrap: wrap; gap: .65rem; margin-top: 1.3rem; }
+.category-nav a { text-transform: capitalize; background: white; border: 1px solid var(--line); border-radius: 2rem; padding: .45rem .85rem; }
+.category-nav a:hover { border-color: var(--accent); }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr)); list-style: none; padding: 0; gap: 1rem; }
+.card { display: flex; flex-direction: column; height: 100%; color: var(--ink); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; background: white; }
+.card:hover { border-color: var(--accent); }
+.card img { width: 100%; height: 12rem; object-fit: contain; padding: 1rem; }
+.card-body { display: flex; flex-direction: column; flex: 1; padding: 1rem; border-top: 1px solid var(--line); }
+.card h3 { font-size: 1rem; margin: .35rem 0 1rem; }
+.card-meta { margin-top: auto; font-size: .875rem; }
+.category { text-transform: capitalize; }
+span.category, .card-meta span { color: var(--accent); font-size: .875rem; }
+.detail { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(1rem, 5vw, 4rem); }
+.detail > img { width: 100%; height: min(28rem, 70vw); object-fit: contain; background: white; padding: 1.5rem; border-radius: var(--radius); }
+input, textarea, button { font: inherit; border-radius: .45rem; padding: .55rem .8rem; }
+input, textarea { border: 1px solid #829486; background: white; color: var(--ink); }
+button { border: 1px solid var(--accent); background: var(--accent); color: white; cursor: pointer; }
+button:disabled { opacity: .65; cursor: wait; }
+:focus-visible { outline: 3px solid #a5481f; outline-offset: 3px; }
+.enquiry { display: grid; gap: .45rem; margin-top: 1.5rem; }
+.enquiry h2 { margin: 0; }
+.enquiry button { justify-self: start; margin-top: .55rem; }
+[role="alert"] { color: #922c21; }
+.confirmation { padding: 1rem; background: var(--tint); }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+@media (max-width: 40rem) { .detail { grid-template-columns: 1fr; } main { padding-top: 1.5rem; } }

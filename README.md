@@ -65,3 +65,7 @@ The React frontend calls our Express API under `/api`. The Express product adapt
 Set `PRODUCT_API_ORIGIN` in `.env` to configure the server-side product provider. See [.env.example](.env.example) for the supported settings. Node and Docker Compose default to Fake Store API.
 
 The Dockerfile builds a standard Linux container image for the app. Docker Compose provides the local demo environment. AWS deployment resources are outside the MVP scope.
+
+### Backend layout
+
+Express starts in `server/src/index.ts` and mounts the API in `server/src/app.ts`. The catalogue and enquiry folders each contain routes, controllers, and services. Routes map URLs to controllers, controllers handle HTTP requests and responses, and services hold catalogue and enquiry rules. The adapters connect to the product provider and SMTP, and shared middleware formats API errors.

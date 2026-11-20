@@ -39,8 +39,8 @@ export function createProductSource(): ProductSource {
       if (new Set(products.map(item => item.id)).size !== products.length ||
           !featuredIds.every(id => products.some(item => item.id === id))) throw new Error('Invalid catalogue')
       cache = { products, expires: Date.now() + 300_000 }
-    // Keep the last successful catalogue and retry the upstream sooner after a failure.
     } catch {
+      // Keep the last successful catalogue and retry the upstream sooner after a failure.
       cache = { products: cache?.products ?? demo, expires: Date.now() + 30_000 }
     }
     return cache.products

@@ -1,16 +1,39 @@
 import { useCallback } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useSearchParams } from 'react-router-dom'
 import { QueryState } from '../../../components/QueryState'
 import { catalogueApi } from '../api/catalogueApi'
+import { CategoryFilters } from '../components/CategoryFilters'
 import { ProductGrid } from '../components/ProductGrid'
 import { useCatalogueQuery } from '../hooks/useCatalogueQuery'
 
+function CategoryProducts({ slug, combined }: { slug: string; combined: boolean }) {
+  const query = useCatalogueQuery(useCallback(signal => catalogueApi.category(slug, signal), [slug]))
+  const CategoryHeading = combined ? 'h2' : 'h1'
+  const GroupHeading = combined ? 'h3' : 'h2'
+
+  return <QueryState {...query}>{data => <section className="category-section">
+    <CategoryHeading className="category">{data.category.name}</CategoryHeading>
+    <GroupHeading>Top rated</GroupHeading>
+    <ProductGrid products={data.featured} />
+    {data.additional.length > 0 && <>
+      <GroupHeading>More in this category</GroupHeading>
+      <ProductGrid products={data.additional} />
+    </>}
+  </section>}</QueryState>
+}
+
 export function CategoryPage() {
   const { slug = '' } = useParams()
-  const query = useCatalogueQuery(useCallback(signal => catalogueApi.category(slug, signal), [slug]))
-  return <QueryState {...query}>{data => <>
-    <h1 className="category">{data.category.name}</h1>
-    <h2>Top rated</h2><ProductGrid products={data.featured} />
-    {data.additional.length > 0 && <><h2>More in this category</h2><ProductGrid products={data.additional} /></>}
-  </>}</QueryState>
+  const [params] = useSearchParams()
+  const catalogue = useCatalogueQuery(catalogueApi.home)
+
+  return <QueryState {...catalogue}>{data => {
+    const available = new Set(data.categories.map(category => category.slug))
+    const selected = [...new Set([slug, ...params.getAll('category').filter(value => available.has(value))])]
+    return <>
+      <CategoryFilters categories={data.categories} selected={selected} />
+      {selected.length > 1 && <h1>Selected categories</h1>}
+      {selected.map(value => <CategoryProducts key={value} slug={value} combined={selected.length > 1} />)}
+    </>
+  }}</QueryState>
 }

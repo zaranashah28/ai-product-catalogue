@@ -7,7 +7,7 @@ import { ProductPage } from '../features/catalogue/pages/ProductPage'
 
 export function App() {
   return <>
-    <header><div className="shell header-inner"><Link className="brand" to="/">Fieldwork</Link><SearchForm /></div></header>
+    <header><div className="shell header-inner"><Link className="brand" to="/"><span className="brand-mark" aria-hidden="true">F</span>Fieldwork</Link><SearchForm /></div></header>
     <main className="shell">
       <Routes>
         <Route path="/" element={<HomePage />} />
@@ -17,5 +17,6 @@ export function App() {
         <Route path="*" element={<><h1>Page not found</h1><Link to="/">Browse the catalogue</Link></>} />
       </Routes>
     </main>
+    <footer className="site-footer"><div className="shell"><Link to="/">Fieldwork</Link></div></footer>
   </>
 }

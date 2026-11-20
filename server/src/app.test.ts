@@ -17,7 +17,7 @@ describe('catalogue HTTP API', () => {
   it('returns the configured five products in order', async () => {
     const response = await makeApp().get('/api/catalogue/home').expect(200)
     expect(response.body.featured.map((p: Product) => p.id)).toEqual(featuredIds)
-    expect(response.body.categories).toEqual([{ name: 'Test Gear', slug: 'test-gear' }])
+    expect(response.body.categories).toEqual([{ name: 'Test Gear', slug: 'test-gear', image: '/api/products/1/image' }])
   })
   it('splits ranked category products into two groups', async () => {
     const { body } = await makeApp().get('/api/categories/test-gear').expect(200)

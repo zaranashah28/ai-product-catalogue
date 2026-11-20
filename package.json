@@ -10,7 +10,8 @@
     "dev:api": "tsx watch server/src/index.ts",
     "dev:web": "vite --config client/vite.config.ts",
     "test": "vitest run",
-    "build": "tsc --noEmit && vite build --config client/vite.config.ts"
+    "build": "tsc --noEmit && vite build --config client/vite.config.ts && vite build --ssr server/src/index.ts --outDir server/dist",
+    "start": "node server/dist/index.js"
   },
   "dependencies": {
     "axios": "^1.13.0",

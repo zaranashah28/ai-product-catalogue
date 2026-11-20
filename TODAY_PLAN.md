@@ -6,4 +6,4 @@
 4. Run frontend and backend suites, build the client, and exercise the Vite-to-Express flow with the local capture sender.
 5. Record the setup, trade-offs, AI review, and time spent.
 
-Next session: add Docker Compose and Mailpit, verify delivery from a clean checkout, and finish the open-PR submission.
+Docker Compose and Mailpit configuration have been added. Running the stack from a clean checkout and opening the submission PR remain pending.

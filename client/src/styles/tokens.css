@@ -1,9 +1,11 @@
 :root {
   color-scheme: light;
-  --ink: #18251e;
-  --accent: #245542;
-  --surface: #f5f6f2;
-  --tint: #e2efe3;
-  --line: #d2dbd2;
+  --ink: #142244;
+  --accent: #214ed2;
+  --surface: #f5f7fb;
+  --tint: #e9efff;
+  --line: #dce3ef;
   --radius: .85rem;
+  --navy: #132763;
+  --highlight: #ffdc77;
 }

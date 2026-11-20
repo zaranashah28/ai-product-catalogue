@@ -17,7 +17,11 @@ export function createApp(source: ProductSource, send: MailSender) {
     const products = await source()
     const featured = featuredIds.map(id => products.find(product => product.id === id))
     if (!featured.every(product => product !== undefined)) return res.status(503).json({ message: 'Featured products are unavailable.' })
-    res.json({ categories: categories(products), featured: featured.map(serialize) })
+    const navigation = categories(products).map(category => {
+      const representative = products.find(product => product.category === category.name)
+      return { ...category, image: representative ? serialize(representative).image : undefined }
+    })
+    res.json({ categories: navigation, featured: featured.map(serialize) })
   })
   app.get('/api/categories/:slug', async (req, res) => {
     const products = await source()

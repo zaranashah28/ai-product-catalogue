@@ -1,0 +1,31 @@
+services:
+  app:
+    build: .
+    ports:
+      - "127.0.0.1:8080:3001"
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3001/').then(response => process.exit(response.ok ? 0 : 1))"]
+      interval: 3s
+      timeout: 3s
+      retries: 10
+    environment:
+      PRODUCT_API_ORIGIN: ${PRODUCT_API_ORIGIN:-https://fakestoreapi.com}
+      CATALOGUE_URL: http://localhost:8080
+      MAILPIT_URL: http://localhost:8025
+      ENQUIRY_MODE: smtp
+      SMTP_HOST: mailpit
+      SMTP_PORT: "1025"
+      SALES_EMAIL: ${SALES_EMAIL:-sales@example.test}
+      SMTP_FROM: ${SMTP_FROM:-catalogue@example.test}
+    depends_on:
+      mailpit:
+        condition: service_healthy
+  mailpit:
+    image: axllent/mailpit:v1.27.4
+    ports:
+      - "127.0.0.1:8025:8025"
+    healthcheck:
+      test: ["CMD", "/mailpit", "readyz"]
+      interval: 3s
+      timeout: 3s
+      retries: 10

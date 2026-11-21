@@ -4,6 +4,7 @@ import type { Product } from '@shared/catalogue'
 type SlideProps = { spotlights: Product[]; index: number }
 
 export function HomeCarouselCopy({ spotlights, index }: SlideProps) {
+  // Keep the stacked panels mounted for consistent layout. Only the active panel can receive focus.
   return <div className="carousel-stack">
     <div className="hero-copy" data-active={index === 0} aria-hidden={index !== 0} inert={index !== 0}>
       <h1>Find your next<br />everyday favourite.</h1>

@@ -32,6 +32,7 @@ export function ProductPage() {
   const query = useCatalogueQuery(useCallback(signal => catalogueApi.product(id, signal), [id]))
   const product = 'data' in query.result ? query.result.data : undefined
   const slug = product && categorySlug(product.category)
+  // Show a category crumb only when the visitor opened the product through that category filter.
   const category = product && slug && slug === state?.categoryFilter
     ? { name: product.category, slug }
     : undefined

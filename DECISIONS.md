@@ -4,7 +4,7 @@
 
 - **Homepage selection** — The owner chooses five featured products. Their IDs and display order are configured in the backend.
 - **Category ranking** — The three highest-rated products appear first. Ties are broken by review count descending, then product ID ascending. Remaining products follow the same order.
-- **Search matching** — The primary match is a case-insensitive substring in the product title or description, with leading and trailing whitespace ignored.
+- **Search matching** — Search returns products with a case-insensitive substring match in the title or description, with leading and trailing whitespace ignored. Unmatched searches show category links and a link to the full catalogue.
 - **Enquiry details** — Name and email are required, and the message is optional. The product comes from the route ID, the customer’s email becomes the Reply-To address, and **Thank you** appears after SMTP accepts the email.
 - **Local sales inbox** — Mailpit receives enquiries during local review without external credentials. The sales recipient and sender come from server configuration. The local capture adapter logs fabricated submissions during development.
 - **Currency** — Prices are displayed in USD.
@@ -15,10 +15,6 @@
 - **Sales inbox** — Mailpit stands in for a live sales inbox so reviewers can verify delivery without setting up SMTP credentials or creating an external account.
 - **Product data** — Fake Store API supplies the catalogue for the demo, so a product management system can wait. Bundled products keep browsing available if the upstream API is down.
 - **Deployment** — Docker Compose runs the app and test inbox locally with one command. AWS deployment was deferred because the challenge makes cloud infrastructure optional and prioritizes quick local review.
-
-## Known deviation
-
-When there are no literal search matches, the backend can match words of four or more characters with one typo, including an adjacent letter swap. If there are still no results, the page can display recommended products. Both behaviors can show products without a literal text match, which deviates from the search acceptance criterion.
 
 ## How the design can grow beyond the proof of concept
 

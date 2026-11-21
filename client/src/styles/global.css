@@ -230,7 +230,7 @@ button:disabled { opacity: .65; cursor: wait; }
 @media (max-width: 40rem) { .detail { grid-template-columns: 1fr; } main { padding-top: 1.5rem; } }
 
 
-/* Empty search results and recovery */
+/* Entrance animation for the active carousel slide */
 @keyframes search-appear {
   from { opacity: 0; transform: translateY(.5rem); }
   to { opacity: 1; transform: translateY(0); }

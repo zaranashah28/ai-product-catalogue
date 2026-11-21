@@ -41,7 +41,7 @@ describe('catalogue HTTP API', () => {
     await api.get('/api/products/1/image').expect('Content-Type', /image\/svg/).expect(200)
     await api.get('/api/products/999').expect(404)
   })
-  it('falls back to nearby words while keeping exact matches first', async () => {
+  it('excludes typo matches and returns an empty list for unmatched text', async () => {
     const stock = [
       { ...products[0], title: 'Cotton Shirt' },
       { ...products[1], title: 'Casual Skirt' },
@@ -49,7 +49,7 @@ describe('catalogue HTTP API', () => {
     const api = request(createApp(async () => stock, vi.fn(async () => {})))
     for (const q of ['shirg', 'shrit', 'shrt', 'shirrtt', 'cotton shirg']) {
       const { body } = await api.get('/api/products').query({ q }).expect(200)
-      expect(body.map((p: Product) => p.title)).toEqual(q === 'shirrtt' ? [] : ['Cotton Shirt'])
+      expect(body).toEqual([])
     }
     const { body } = await api.get('/api/products').query({ q: 'shirt' }).expect(200)
     expect(body.map((p: Product) => p.title)).toEqual(['Cotton Shirt'])

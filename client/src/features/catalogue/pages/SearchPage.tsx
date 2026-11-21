@@ -11,11 +11,11 @@ function SearchEmpty({ term }: { term: string }) {
   return <>
     <section className={styles.empty} aria-labelledby="search-heading">
       <span className={styles.icon} aria-hidden="true" />
-      <h1 id="search-heading" role="status">No results for “{term}”</h1>
+      <h1 id="search-heading">No results for “{term}”</h1>
       <p>Check your spelling or try a broader search.</p>
       <Link className={styles.browse} to="/products">Browse all products</Link>
     </section>
-    <QueryState {...recovery}>{data => <>
+    <QueryState {...recovery}>{data =>
       <section className={styles.recovery} aria-labelledby="explore-categories">
         <h2 id="explore-categories">Explore categories</h2>
         <ul className={styles.categories}>{data.categories.map(category =>
@@ -27,11 +27,7 @@ function SearchEmpty({ term }: { term: string }) {
           </li>
         )}</ul>
       </section>
-      <section className={styles.recovery} aria-labelledby="search-recommendations">
-        <h2 id="search-recommendations">Recommended products</h2>
-        <ProductGrid products={data.featured} />
-      </section>
-    </>}</QueryState>
+    }</QueryState>
   </>
 }
 

@@ -5,7 +5,7 @@
 - **AI coding tool and model** — OpenAI Codex, based on GPT-6. The exact model variant was unavailable.
 - **Verification tools** — npm and Vite for builds, Vitest for frontend and backend tests, and Docker Compose, Playwright, and Mailpit for the browser-to-email smoke test.
 - **Agent instructions** — The repo contains no committed project-specific agent instruction files.
-- **Plan and spec** — The working plan is in [TODAY_PLAN.md](TODAY_PLAN.md). The acceptance assumptions and known deviation are in [DECISIONS.md](DECISIONS.md).
+- **Plan and spec** — The working plan is in [TODAY_PLAN.md](TODAY_PLAN.md). The acceptance assumptions are in [DECISIONS.md](DECISIONS.md).
 
 ## Prompts and decisions that shaped the solution
 

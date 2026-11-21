@@ -3,6 +3,7 @@ import { describe, expect, it, vi } from 'vitest'
 import { featuredIds } from './catalogue/service'
 import { createApp } from './app'
 import { createMailSender } from './adapters/mail'
+import { ENQUIRY_CAPTURE_LOG, ENQUIRY_CAPTURE_MODE } from './enquiries/constants'
 import type { Product } from '../../shared/catalogue'
 
 const products: Product[] = featuredIds.map((id, index) => ({
@@ -49,10 +50,10 @@ describe('catalogue HTTP API', () => {
   it('captures the configured recipient, reply address and product', async () => {
     const log = vi.spyOn(console, 'info').mockImplementation(() => {})
     try {
-      const sender = createMailSender({ ENQUIRY_MODE: 'capture', SALES_EMAIL: 'sales@example.test' })
+      const sender = createMailSender({ ENQUIRY_MODE: ENQUIRY_CAPTURE_MODE, SALES_EMAIL: 'sales@example.test' })
       const api = request(createApp(async () => products, sender))
       await api.post('/api/products/1/enquiries').send(sample).expect(204)
-      expect(log).toHaveBeenCalledWith('Local enquiry captured:', expect.objectContaining({
+      expect(log).toHaveBeenCalledWith(ENQUIRY_CAPTURE_LOG, expect.objectContaining({
         to: 'sales@example.test', replyTo: sample.email, text: expect.stringContaining('Canvas Bag (#1)'),
       }))
     } finally {

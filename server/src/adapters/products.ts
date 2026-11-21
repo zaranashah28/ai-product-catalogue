@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { IMAGE_UNAVAILABLE_MESSAGE } from '../catalogue/constants'
 import { featuredIds, type ProductSource } from '../catalogue/service'
 import type { Product } from '../../../shared/catalogue'
 
@@ -59,10 +60,10 @@ export async function fetchProductImage(value: string) {
   if (url.origin !== productApiOrigin() || !url.pathname.startsWith('/img/')) throw new Error('Invalid image URL')
   const response = await fetch(url, { redirect: 'error', signal: AbortSignal.timeout(2500) })
   const type = response.headers.get('content-type')?.split(';')[0]
-  if (!response.ok || !type || !['image/jpeg', 'image/png', 'image/webp'].includes(type)) throw new Error('Image unavailable')
+  if (!response.ok || !type || !['image/jpeg', 'image/png', 'image/webp'].includes(type)) throw new Error(IMAGE_UNAVAILABLE_MESSAGE)
   // Enforce the image size limit while streaming, even when Content-Length is unavailable.
   const reader = response.body?.getReader()
-  if (!reader) throw new Error('Image unavailable')
+  if (!reader) throw new Error(IMAGE_UNAVAILABLE_MESSAGE)
   const chunks: Uint8Array[] = []
   let size = 0
   for (;;) {

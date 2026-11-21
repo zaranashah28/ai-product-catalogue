@@ -2,6 +2,7 @@ import type { Request, Response } from 'express'
 import { HttpError } from '../middleware/errorHandler'
 import { fetchProductImage } from '../adapters/products'
 import { categorySlug, type Product } from '../../../shared/catalogue'
+import { PRODUCT_NOT_FOUND_MESSAGE } from './constants'
 import { searchProducts } from './search'
 import { categories, featuredIds, findProduct, rank, type ProductSource } from './service'
 
@@ -40,7 +41,7 @@ export function createCatalogueController(source: ProductSource) {
 
   async function productDetails(req: Request<{ id: string }>, res: Response) {
     const product = await findProduct(source, req.params.id)
-    if (!product) throw new HttpError(404, { message: 'Product not found.' })
+    if (!product) throw new HttpError(404, { message: PRODUCT_NOT_FOUND_MESSAGE })
     res.json(serialize(product))
   }
 

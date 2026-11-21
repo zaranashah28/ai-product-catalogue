@@ -8,4 +8,34 @@
   --radius: .85rem;
   --navy: #132763;
   --highlight: #ffdc77;
+
+  --search-surface: #eef1f8;
+  --search-icon: #405684;
+  --search-hover: #dce5f7;
+  --placeholder-text: #50617f;
+  --shadow-card: #14224424;
+  --card-surface: #fbfcff;
+  --rating-star: #946300;
+  --shadow-emblem: #13276324;
+  --control-border: #829486;
+  --focus-outline: #a5481f;
+  --danger: #922c21;
+  --hero-glow: #5e7ef0;
+  --hero-start: #152e84;
+  --hero-end: #244cd3;
+  --hero-text: #f0f3ff;
+  --highlight-hover: #ffe69d;
+  --shadow-hero-card: #0d184b50;
+  --search-focus: #91adff;
+  --spotlight-glow: #44709f;
+  --spotlight-surface: #142941;
+  --shadow-spotlight: #0d184b55;
+  --carousel-dot: #a6b4cf;
+  --optional-text: #53627c;
+  --enquiry-border: #8796ad;
+  --spinner-on-accent-track: rgb(255 255 255 / 45%);
+  --breadcrumb-divider: #677691;
+  --muted-text: #4a5873;
+  --shadow-category: #14224415;
+  --paper: #fff;
 }

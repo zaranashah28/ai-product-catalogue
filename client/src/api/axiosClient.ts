@@ -1,5 +1,5 @@
 import axios from 'axios'
-import type { ApiError } from '../../../shared/catalogue'
+import type { ApiError } from '@shared/catalogue'
 
 export class RequestError extends Error {
   constructor(message: string, public fields?: ApiError['fields']) { super(message) }

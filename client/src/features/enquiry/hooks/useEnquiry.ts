@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react'
-import type { ApiError, Enquiry } from '../../../../../shared/catalogue'
-import { RequestError } from '../../../api/axiosClient'
-import { submitEnquiry } from '../api/enquiryApi'
+import type { ApiError, Enquiry } from '@shared/catalogue'
+import { RequestError } from '@/api/axiosClient'
+import { submitEnquiry } from '@/features/enquiry/api/enquiryApi'
 
 type State = { status: 'idle' | 'pending' | 'success' } | { status: 'error'; error: ApiError }
 

@@ -7,6 +7,7 @@ export function createCatalogueRouter(source: ProductSource) {
   const controller = createCatalogueController(source)
 
   router.get('/catalogue/home', controller.home)
+  router.get('/catalogue/products', controller.allProducts)
   router.get('/categories/:slug', controller.category)
   router.get('/products', controller.search)
   router.get('/products/:id', controller.productDetails)

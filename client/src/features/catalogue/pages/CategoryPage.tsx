@@ -1,10 +1,9 @@
 import { useCallback } from 'react'
 import { useParams, useSearchParams } from 'react-router-dom'
-import { QueryState } from '../../../components/QueryState'
-import { catalogueApi } from '../api/catalogueApi'
-import { CategoryFilters } from '../components/CategoryFilters'
-import { ProductGrid } from '../components/ProductGrid'
-import { useCatalogueQuery } from '../hooks/useCatalogueQuery'
+import { QueryState } from '@/components'
+import { catalogueApi } from '@/features/catalogue/api/catalogueApi'
+import { CategoryFilters, ProductGrid } from '@/features/catalogue/components'
+import { useCatalogueQuery } from '@/features/catalogue/hooks/useCatalogueQuery'
 
 function CategoryProducts({ slug, combined }: { slug: string; combined: boolean }) {
   const query = useCatalogueQuery(useCallback(signal => catalogueApi.category(slug, signal), [slug]))
@@ -14,10 +13,10 @@ function CategoryProducts({ slug, combined }: { slug: string; combined: boolean 
   return <QueryState {...query}>{data => <section className="category-section">
     <CategoryHeading className="category">{data.category.name}</CategoryHeading>
     <GroupHeading>Top rated</GroupHeading>
-    <ProductGrid products={data.featured} />
+    <ProductGrid products={data.featured} categoryFilter={data.category.slug} />
     {data.additional.length > 0 && <>
       <GroupHeading>More in this category</GroupHeading>
-      <ProductGrid products={data.additional} />
+      <ProductGrid products={data.additional} categoryFilter={data.category.slug} />
     </>}
   </section>}</QueryState>
 }

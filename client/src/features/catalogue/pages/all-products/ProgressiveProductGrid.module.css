@@ -1,0 +1,25 @@
+.progress {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: .75rem 1rem;
+  margin-top: 1.5rem;
+}
+
+.progress p {
+  margin: 0;
+  color: var(--ink);
+  font-size: .875rem;
+}
+
+.progress button {
+  min-block-size: 2.75rem;
+  background: var(--paper);
+  color: var(--accent);
+  font-weight: 650;
+}
+
+.progress button:hover {
+  background: var(--tint);
+}

@@ -1,0 +1,27 @@
+.featuredHeading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem;
+  margin: 2rem 0 .75rem;
+}
+
+.featuredHeading h2 {
+  font-size: clamp(1.75rem, 3.2vw, 2.4rem);
+  margin: 0;
+}
+
+.featuredHeading a {
+  padding: .45rem .75rem;
+  border: 1px solid var(--line);
+  border-radius: .45rem;
+  background: var(--paper);
+  font-weight: 650;
+  text-decoration: none;
+}
+
+.featuredHeading a:hover {
+  border-color: var(--accent);
+  background: var(--tint);
+}

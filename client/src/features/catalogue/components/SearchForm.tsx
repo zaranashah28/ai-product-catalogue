@@ -15,7 +15,7 @@ export function SearchForm() {
   }}>
     <label className="sr-only" htmlFor="catalogue-search">Search products</label>
     <button type="submit" aria-label="Search"><span className="search-icon" aria-hidden="true" /></button>
-    <input id="catalogue-search" name="q" type="search" value={value} placeholder="Search for products" maxLength={120} onChange={event => {
+    <input id="catalogue-search" name="q" type="search" autoComplete="off" value={value} placeholder="Search for products" maxLength={120} onChange={event => {
       setValue(event.currentTarget.value)
       if (pathname === '/search' && params.has('q') && !event.currentTarget.value.trim()) {
         navigate('/', { replace: true })

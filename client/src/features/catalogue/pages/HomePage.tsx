@@ -1,9 +1,9 @@
-import { QueryState } from '../../../components/QueryState'
-import { catalogueApi } from '../api/catalogueApi'
-import { CategoryFilters } from '../components/CategoryFilters'
-import { HomeCarousel } from '../components/HomeCarousel'
-import { ProductGrid } from '../components/ProductGrid'
-import { useCatalogueQuery } from '../hooks/useCatalogueQuery'
+import { Link } from 'react-router-dom'
+import { QueryState } from '@/components'
+import { catalogueApi } from '@/features/catalogue/api/catalogueApi'
+import { CategoryFilters, HomeCarousel, ProductGrid } from '@/features/catalogue/components'
+import { useCatalogueQuery } from '@/features/catalogue/hooks/useCatalogueQuery'
+import styles from './HomePage.module.css'
 
 export function HomePage() {
   const query = useCatalogueQuery(catalogueApi.home)
@@ -11,7 +11,10 @@ export function HomePage() {
     <CategoryFilters categories={data.categories} />
     <HomeCarousel featured={data.featured} />
     <section className="featured-section" aria-labelledby="featured-products">
-      <h2 id="featured-products">Featured products</h2>
+      <div className={styles.featuredHeading}>
+        <h2 id="featured-products">Featured products</h2>
+        <Link to="/products">See all products</Link>
+      </div>
       <ProductGrid products={data.featured} />
     </section>
   </>}</QueryState>

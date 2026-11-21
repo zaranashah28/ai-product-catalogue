@@ -1,0 +1,68 @@
+.form {
+  display: grid;
+  gap: .75rem;
+  margin-top: 1rem;
+  padding: clamp(.85rem, 2vw, 1.15rem);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.form h2 {
+  margin: 0;
+  font-size: 1.15rem;
+  letter-spacing: -.02em;
+}
+
+.field { display: grid; gap: .25rem; min-width: 0; }
+.field label { font-size: .875rem; font-weight: 650; }
+.optional { color: var(--optional-text); font-weight: 400; }
+.error { color: var(--danger); font-size: .85rem; }
+.form [role="alert"] { margin: 0; font-size: .875rem; }
+
+.field :is(input, textarea) {
+  min-width: 0;
+  border-color: var(--enquiry-border);
+  border-radius: .5rem;
+  background: var(--paper);
+  padding: .45rem .65rem;
+}
+
+.field input { min-block-size: 2.75rem; }
+
+.form textarea { resize: none; }
+
+.form :is(input, textarea):focus {
+  border-color: var(--accent);
+  background: var(--paper);
+  outline: 2px solid transparent;
+  box-shadow: 0 0 0 3px var(--tint);
+}
+
+.form :is(input, textarea)[aria-invalid="true"] {
+  border-color: var(--danger);
+}
+
+.form button {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  justify-self: start;
+  min-block-size: 2.75rem;
+  padding-inline: 1rem;
+  font-weight: 650;
+}
+
+.form button :global(.spinner) {
+  width: 1em;
+  height: 1em;
+  border-color: var(--spinner-on-accent-track);
+  border-top-color: currentColor;
+}
+
+@media (forced-colors: active) {
+  .form :is(input, textarea):focus {
+    outline: 2px solid Highlight;
+    outline-offset: 2px;
+  }
+}

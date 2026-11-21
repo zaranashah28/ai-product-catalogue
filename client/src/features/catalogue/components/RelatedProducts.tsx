@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
-import { catalogueApi } from '../api/catalogueApi'
-import { useCatalogueQuery } from '../hooks/useCatalogueQuery'
+import { catalogueApi } from '@/features/catalogue/api/catalogueApi'
+import { useCatalogueQuery } from '@/features/catalogue/hooks/useCatalogueQuery'
 import { ProductGrid } from './ProductGrid'
 
 export function RelatedProducts({ slug, productId }: { slug: string; productId: number }) {

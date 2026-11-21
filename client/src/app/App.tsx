@@ -1,9 +1,10 @@
 import { Link, Route, Routes } from 'react-router-dom'
-import { SearchForm } from '../features/catalogue/components/SearchForm'
-import { HomePage } from '../features/catalogue/pages/HomePage'
-import { CategoryPage } from '../features/catalogue/pages/CategoryPage'
-import { SearchPage } from '../features/catalogue/pages/SearchPage'
-import { ProductPage } from '../features/catalogue/pages/ProductPage'
+import { SearchForm } from '@/features/catalogue/components'
+import { HomePage } from '@/features/catalogue/pages/HomePage'
+import { CategoryPage } from '@/features/catalogue/pages/CategoryPage'
+import { SearchPage } from '@/features/catalogue/pages/SearchPage'
+import { ProductPage } from '@/features/catalogue/pages/ProductPage'
+import { AllProductsPage } from '@/features/catalogue/pages/all-products/AllProductsPage'
 
 export function App() {
   return <>
@@ -13,6 +14,7 @@ export function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/categories/:slug" element={<CategoryPage />} />
         <Route path="/search" element={<SearchPage />} />
+        <Route path="/products" element={<AllProductsPage />} />
         <Route path="/products/:id" element={<ProductPage />} />
         <Route path="*" element={<><h1>Page not found</h1><Link to="/">Browse the catalogue</Link></>} />
       </Routes>

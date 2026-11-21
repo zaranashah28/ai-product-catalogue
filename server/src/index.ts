@@ -18,7 +18,7 @@ if (process.env.NODE_ENV === PRODUCTION_ENV) {
   const clientDir = resolve('client/dist')
   const index = resolve(clientDir, 'index.html')
   app.use(express.static(clientDir))
-  app.get(['/', '/search', '/categories/:slug', '/products/:id'], (_, res) => {
+  app.get(['/', '/search', '/categories/:slug', '/products', '/products/:id'], (_, res) => {
     res.sendFile(index)
   })
 }

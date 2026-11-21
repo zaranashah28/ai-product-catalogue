@@ -20,6 +20,13 @@ describe('catalogue HTTP API', () => {
     expect(response.body.featured.map((p: Product) => p.id)).toEqual(featuredIds)
     expect(response.body.categories).toEqual([{ name: 'Test Gear', slug: 'test-gear', image: '/api/products/1/image' }])
   })
+  it('lists all products, including products outside the featured selection', async () => {
+    const stock = [...products, { ...products[0], id: 999 }]
+    const api = request(createApp(async () => stock, vi.fn(async () => {})))
+    const { body } = await api.get('/api/catalogue/products').expect(200)
+    expect(body.map((product: Product) => product.id)).toEqual(stock.map(product => product.id))
+    expect(body.at(-1).image).toBe('/api/products/999/image')
+  })
   it('splits ranked category products into two groups', async () => {
     const { body } = await makeApp().get('/api/categories/test-gear').expect(200)
     expect(body.featured.map((p: Product) => p.id)).toEqual([15, 9, 5])

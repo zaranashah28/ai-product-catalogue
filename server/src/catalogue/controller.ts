@@ -23,6 +23,10 @@ export function createCatalogueController(source: ProductSource) {
     res.json({ categories: navigation, featured: featured.map(serialize) })
   }
 
+  async function allProducts(_req: Request, res: Response) {
+    res.json((await source()).map(serialize))
+  }
+
   // Rank category products once before splitting them into the featured and remaining groups.
   async function category(req: Request<{ slug: string }>, res: Response) {
     const products = await source()
@@ -56,5 +60,5 @@ export function createCatalogueController(source: ProductSource) {
       .send(image?.body ?? placeholder)
   }
 
-  return { home, category, search, productDetails, productImage }
+  return { home, allProducts, category, search, productDetails, productImage }
 }

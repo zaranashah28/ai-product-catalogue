@@ -3,14 +3,14 @@ import { act, cleanup, fireEvent, render, screen, within } from '@testing-librar
 import { MemoryRouter, useLocation } from 'react-router-dom'
 import { afterEach, beforeEach, expect, it, vi } from 'vitest'
 import { App } from './App'
-import { catalogueApi } from '../features/catalogue/api/catalogueApi'
-import { submitEnquiry } from '../features/enquiry/api/enquiryApi'
-import type { Product } from '../../../shared/catalogue'
+import { catalogueApi } from '@/features/catalogue/api/catalogueApi'
+import { submitEnquiry } from '@/features/enquiry/api/enquiryApi'
+import type { Product } from '@shared/catalogue'
 
-vi.mock('../features/catalogue/api/catalogueApi', () => ({
-  catalogueApi: { home: vi.fn(), category: vi.fn(), search: vi.fn(), product: vi.fn() },
+vi.mock('@/features/catalogue/api/catalogueApi', () => ({
+  catalogueApi: { home: vi.fn(), all: vi.fn(), category: vi.fn(), search: vi.fn(), product: vi.fn() },
 }))
-vi.mock('../features/enquiry/api/enquiryApi', () => ({ submitEnquiry: vi.fn() }))
+vi.mock('@/features/enquiry/api/enquiryApi', () => ({ submitEnquiry: vi.fn() }))
 
 const products: Product[] = Array.from({ length: 5 }, (_, i) => ({
   id: i + 1, title: `Canvas item ${i + 1}`, description: 'Sample product', price: 20,
@@ -47,12 +47,44 @@ it('renders five featured cards, browses a category and opens a product', async 
   fireEvent.click(screen.getByRole('link', { name: /Canvas item 1/ }))
   expect(viewport.scrollTop).toBe(0)
   expect(await screen.findByRole('heading', { name: 'Canvas item 1' })).toBeTruthy()
+  const breadcrumb = screen.getByRole('navigation', { name: 'Breadcrumb' })
+  expect(within(breadcrumb).getByRole('link', { name: 'Catalogue' }).getAttribute('href')).toBe('/')
+  expect(within(breadcrumb).getByText('Canvas item 1').getAttribute('aria-current')).toBe('page')
   const related = await screen.findByRole('region', { name: 'You might also like' })
   expect(within(related).getAllByRole('link')).toHaveLength(4)
   expect(within(related).queryByRole('link', { name: /Canvas item 1/ })).toBeNull()
-  fireEvent.click(screen.getByRole('link', { name: 'Gear' }))
+  fireEvent.click(within(breadcrumb).getByRole('link', { name: 'Gear' }))
   expect(await screen.findByRole('heading', { name: 'Gear' })).toBeTruthy()
 })
+it('opens the full catalogue from featured products', async () => {
+  const stock = Array.from({ length: 9 }, (_, index) => ({
+    ...products[0], id: index + 1, title: `Full catalogue product ${index + 1}`,
+  }))
+  vi.mocked(catalogueApi.all).mockResolvedValue(stock)
+  open()
+  fireEvent.click(await screen.findByRole('link', { name: 'See all products' }))
+  expect(screen.getByRole('heading', { name: 'All products' })).toBeTruthy()
+  const breadcrumb = screen.getByRole('navigation', { name: 'Breadcrumb' })
+  expect(within(breadcrumb).getByRole('link', { name: 'Catalogue' }).getAttribute('href')).toBe('/')
+  expect(within(breadcrumb).getByText('All products').getAttribute('aria-current')).toBe('page')
+  expect(screen.getByLabelText('Current location').textContent).toBe('/products')
+  expect(await screen.findByText('Showing 8 of 9 products')).toBeTruthy()
+  expect(screen.queryByRole('link', { name: /Full catalogue product 9/ })).toBeNull()
+  fireEvent.click(screen.getByRole('button', { name: 'Load more' }))
+  expect(screen.getByRole('link', { name: /Full catalogue product 9/ })).toBeTruthy()
+  expect(screen.getByText('Showing 9 of 9 products')).toBeTruthy()
+})
+
+it('omits the category breadcrumb when opening a featured product from home', async () => {
+  open()
+  const featured = await screen.findByRole('region', { name: 'Featured products' })
+  fireEvent.click(within(featured).getByRole('link', { name: /Canvas item 1/ }))
+  const breadcrumb = screen.getByRole('navigation', { name: 'Breadcrumb' })
+  await within(breadcrumb).findByText('Canvas item 1')
+  expect(within(breadcrumb).getAllByRole('listitem').map(item => item.textContent))
+    .toEqual(['Catalogue', 'Canvas item 1'])
+})
+
 it('browses homepage highlights and wraps back to the introduction', async () => {
   open()
   await screen.findByRole('heading', { name: /Find your next/ })
@@ -100,7 +132,8 @@ it('submits a shareable search and handles an empty result', async () => {
   open()
   fireEvent.change(screen.getByRole('searchbox'), { target: { value: 'green jacket' } })
   fireEvent.click(screen.getByRole('button', { name: 'Search' }))
-  expect(await screen.findByText(/There are no search results/)).toBeTruthy()
+  expect(await screen.findByText(/No results for/)).toBeTruthy()
+  expect(screen.getByRole('link', { name: 'Browse all products' }).getAttribute('href')).toBe('/products')
   expect(screen.getByLabelText('Current location').textContent).toBe('/search?q=green+jacket')
   expect(await screen.findByRole('heading', { name: 'Explore categories' })).toBeTruthy()
   expect(screen.getByRole('link', { name: 'Gear' }).getAttribute('href')).toBe('/categories/gear')
@@ -109,7 +142,7 @@ it('submits a shareable search and handles an empty result', async () => {
   input.focus()
   fireEvent.change(input, { target: { value: '' } })
   expect(await screen.findByRole('heading', { name: 'Featured products' })).toBeTruthy()
-  expect(screen.queryByText(/There are no search results/)).toBeNull()
+  expect(screen.queryByText(/No results for/)).toBeNull()
   expect(screen.getByLabelText('Current location').textContent).toBe('/')
   expect(document.activeElement).toBe(input)
 })
@@ -120,6 +153,9 @@ it('preserves details after failure and shows thanks after a successful retry', 
   open('/products/1')
   expect(screen.getByText('Loading product details…').closest('[role=status]')).toBeTruthy()
   fireEvent.click(await screen.findByRole('button', { name: 'Enquire' }))
+  const breadcrumb = screen.getByRole('navigation', { name: 'Breadcrumb' })
+  expect(within(breadcrumb).getAllByRole('listitem').map(item => item.textContent))
+    .toEqual(['Catalogue', 'Canvas item 1'])
   const name = screen.getByLabelText<HTMLInputElement>('Name')
   const email = screen.getByLabelText<HTMLInputElement>('Email')
   expect(email.checkValidity()).toBe(false)
